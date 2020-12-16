@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JS Playground - Code Break</title>
+	<link rel="preconnect" href="https://fonts.gstatic.com"> 
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+	
+	<div id="content">
+		<div id="editorwrapper">
+			<div id="toolbar">
+				<h1>JS Playground</h1>
+				<svg onclick="_runJavascript(_editor.getValue())" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320.001 320.001"><path d="M295.84 146.049l-256-144c-4.96-2.784-11.008-2.72-15.904.128C19.008 5.057 16 10.305 16 16.001v288c0 5.696 3.008 10.944 7.936 13.824 2.496 1.44 5.28 2.176 8.064 2.176 2.688 0 5.408-.672 7.84-2.048l256-144c5.024-2.848 8.16-8.16 8.16-13.952s-3.136-11.104-8.16-13.952z"/></svg>
+			</div>
+			<div id="editor">//Actual Cool Part
+function _runJavascript(text) {
+	try {
+		const f = new Function(text);
+		f();
+	}
+	catch(exception) {
+		console.error(exception);
+	}
+}
+function _clearLog() {
+	_console.firstElementChild.innerHTML = "";
+}
+
+//Redefine console functions
+console.reallog = console.log;
+console.log = function() {
+	var line = document.createElement('div');
+	line.className = 'consoleLine';
+
+	var content = [];
+	for(var i = 0;i < arguments.length;++i) {
+		content.push(_consoleParse(arguments[i]));
+	}
+	line.innerHTML = content.join("<br>");
+
+	if(line.innerHTML.replace(/\s/g, '') !== "") {
+		_console.firstElementChild.appendChild(line, _console.firstElementChild);
+	}
+}
+console.realerror = console.error;
+console.error = function() {
+	var line = document.createElement('div');
+	line.className = 'consoleLine error';
+	line.textContent = [].join.call(arguments, "<br>");
+	_console.firstElementChild.appendChild(line, _console.firstElementChild);
+}
+			</div>
+			<div id="status">Line 0 Column 0</div>
+		</div>
+		<div class='resizer' onmousedown="_resizeData = {elem:this,start:{x:event.clientX,y:event.clientY}};_resizing = true;"></div>
+		<div id="consolewrapper">
+			<div id="consolehead">
+				<h2>JS Console</h2>
+				<svg onclick="_clearLog()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M436.3 75.7C388 27.401 324.101 0 256 0 115.343 0 0 115.116 0 256c0 140.958 115.075 256 256 256 140.306 0 256-114.589 256-256 0-68.101-27.4-132.001-75.7-180.3zM256 451c-107.786 0-195-86.985-195-195 0-42.001 13.2-81.901 37.5-114.901l272.401 272.1C337.899 437.8 298.001 451 256 451zm157.2-80.101L141.099 98.5C174.101 74.2 213.999 61 256 61c107.789 0 195 86.985 195 195 0 41.999-13.2 81.899-37.8 114.899z"/></svg>
+			</div>
+			<div id="console" onmousedown="_consoleEditor.focus();">
+				<div id="consoleLines" class="ace_editor ace-ayu-dark ace_dark" onmousedown="event.stopPropagation();">
+					
+				</div>
+				<div class="consoleLine inputLine">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492.004 492.004"><path d="M382.678 226.804L163.73 7.86C158.666 2.792 151.906 0 144.698 0s-13.968 2.792-19.032 7.86l-16.124 16.12c-10.492 10.504-10.492 27.576 0 38.064L293.398 245.9l-184.06 184.06c-5.064 5.068-7.86 11.824-7.86 19.028 0 7.212 2.796 13.968 7.86 19.04l16.124 16.116c5.068 5.068 11.824 7.86 19.032 7.86s13.968-2.792 19.032-7.86L382.678 265c5.076-5.084 7.864-11.872 7.848-19.088.016-7.244-2.772-14.028-7.848-19.108z"/></svg>
+					<div id="consoleInput" onkeydown="_keyDown(event)"></div>
+				</div>
+			</div>
+		</div>	
+	</div>
+
+
+	<script src="ace/ace.js"></script>
+	<script src="ace/ext-emmet.js"></script>
+	<script src="ace/ext-modelist.js"></script>
+	<script src="ace/ext-language_tools.js"></script>
+	<script src="script.js"></script>
+</body>
+</html>
